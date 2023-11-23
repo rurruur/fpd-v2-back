@@ -47,3 +47,6 @@ CREATE TABLE `auth_salt` (
   PRIMARY KEY (`uid`),
   CONSTRAINT `auth_salt_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `auth_user` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE fpd_dev.auth_user ADD CONSTRAINT auth_user_UN_email UNIQUE KEY (`email`);
+ALTER TABLE fpd_dev.auth_user ADD CONSTRAINT auth_user_UN_name UNIQUE KEY (`name`);

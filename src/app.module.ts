@@ -4,6 +4,7 @@ import { CamelCasePlugin, MysqlDialect } from 'kysely';
 import { createPool } from 'mysql2';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { KyselyModule } from './database/kysely.module';
 
 @Module({
@@ -30,6 +31,7 @@ import { KyselyModule } from './database/kysely.module';
         plugins: [new CamelCasePlugin()],
       }),
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

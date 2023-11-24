@@ -40,6 +40,7 @@ export class KyselyModule {
         },
         provider,
       ],
+      global: true,
     };
   }
 }

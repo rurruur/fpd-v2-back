@@ -1,3 +1,4 @@
+import { Kysely } from 'kysely';
 import { AuthSaltTable } from '../entity/auth-salt.entity';
 import { AuthUserTable } from '../entity/auth-user.entity';
 import { CommentTable } from '../entity/comment.entity';
@@ -9,3 +10,5 @@ export interface Database {
   post: PostTable;
   comment: CommentTable;
 }
+
+export type DB = Kysely<Database>;

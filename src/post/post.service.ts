@@ -8,7 +8,8 @@ export class PostService {
   constructor(@InjectDB() private readonly db: DB) {}
 
   async getPosts() {
-    return this.db.selectFrom('post').selectAll().execute();
+    const posts = await this.db.selectFrom('post').selectAll().execute();
+    return posts.sort((a, b) => b.id - a.id);
   }
 
   async createPost({ uid, name }: User, title: string, content: string) {
@@ -30,7 +31,7 @@ export class PostService {
 
     const comments = await this.db.selectFrom('comment').selectAll().where('postId', '=', id).execute();
 
-    return { ...post, comments };
+    return { ...post, comments: comments.sort((a, b) => b.id - a.id) };
   }
 
   async addComment({ uid, name }: User, id: number, content: string) {

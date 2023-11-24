@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { createRandomBytes, hashPassword } from '../lib/crypto';
+import { createRandomBytes } from '../lib/crypto';
 import { AuthRepository } from './auth.repository';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthUserService {
-  constructor(private readonly authRepository: AuthRepository) {}
+  constructor(private readonly authRepository: AuthRepository, private readonly authService: AuthService) {}
 
   async register(email: string, password: string, name: string) {
     const users = await this.authRepository.findUserByEmailOrName(email, name);
@@ -15,11 +16,23 @@ export class AuthUserService {
     }
 
     const uid = createRandomBytes();
-    const { hashedPassword, salt } = await hashPassword(password);
+    const { hashedPassword, salt } = await this.authService.hashPassword(password);
 
     await this.authRepository.insertUser(uid, email, name, hashedPassword);
     await this.authRepository.insertSalt(uid, salt);
 
     return { uid, email, name };
+  }
+
+  async login(email: string, password: string) {
+    const user = await this.authRepository.findUserWithSaltByEmail(email);
+    const isValid = await this.authService.validatePassword(user, password);
+    if (!isValid) {
+      throw new BadRequestException('잘못된 비밀번호입니다.');
+    }
+
+    const accessToken = this.authService.generateAccessToken(user);
+
+    return { accessToken };
   }
 }

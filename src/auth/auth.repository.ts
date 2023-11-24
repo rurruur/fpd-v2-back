@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { DB } from '../database/database';
 import { InjectDB } from '../database/kysely.module';
 
@@ -13,12 +13,15 @@ export class AuthRepository {
       .executeTakeFirstOrThrow();
   }
 
-  async findUserWithSalt(uid: string) {
+  async findUserWithSaltByEmail(email: string) {
     return this.db
       .selectFrom('authUser as au')
       .innerJoin('authSalt as as', 'au.uid', 'as.uid')
-      .where('uid', '=', uid)
-      .executeTakeFirstOrThrow();
+      .selectAll()
+      .where('email', '=', email)
+      .executeTakeFirstOrThrow(
+        () => new BadRequestException('가입되지 않은 이메일입니다.'),
+      );
   }
 
   async findUserByEmailOrName(email: string, name: string) {

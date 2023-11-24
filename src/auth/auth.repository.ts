@@ -7,10 +7,7 @@ export class AuthRepository {
   constructor(@InjectDB() private readonly db: DB) {}
 
   async findUser(uid: string) {
-    return this.db
-      .selectFrom('authUser')
-      .where('uid', '=', uid)
-      .executeTakeFirstOrThrow();
+    return this.db.selectFrom('authUser').where('uid', '=', uid).executeTakeFirstOrThrow();
   }
 
   async findUserWithSaltByEmail(email: string) {
@@ -19,9 +16,7 @@ export class AuthRepository {
       .innerJoin('authSalt as as', 'au.uid', 'as.uid')
       .selectAll()
       .where('email', '=', email)
-      .executeTakeFirstOrThrow(
-        () => new BadRequestException('가입되지 않은 이메일입니다.'),
-      );
+      .executeTakeFirstOrThrow(() => new BadRequestException('가입되지 않은 이메일입니다.'));
   }
 
   async findUserByEmailOrName(email: string, name: string) {
@@ -33,10 +28,7 @@ export class AuthRepository {
   }
 
   async insertUser(uid: string, email: string, name: string, password: string) {
-    return this.db
-      .insertInto('authUser')
-      .values({ uid, email, name, password })
-      .execute();
+    return this.db.insertInto('authUser').values({ uid, email, name, password }).execute();
   }
 
   async insertSalt(uid: string, salt: string) {

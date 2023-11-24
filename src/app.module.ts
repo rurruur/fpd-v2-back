@@ -11,8 +11,7 @@ import { KyselyModule } from './database/kysely.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath:
-        process.env.NODE_ENV === 'production' ? '.env' : '.env.local',
+      envFilePath: process.env.NODE_ENV === 'production' ? '.env' : '.env.local',
     }),
     KyselyModule.forRootAsync({
       inject: [ConfigService],

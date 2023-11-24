@@ -6,10 +6,7 @@ import { InjectDB } from './database/kysely.module';
 
 @Controller()
 export class AppController {
-  constructor(
-    @InjectDB() private readonly db: Kysely<Database>,
-    private readonly appService: AppService,
-  ) {}
+  constructor(@InjectDB() private readonly db: Kysely<Database>, private readonly appService: AppService) {}
 
   @Get()
   async getHello() {

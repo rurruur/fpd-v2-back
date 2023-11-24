@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { User } from '../auth/dto/user.dto';
 import { DB } from '../database/database';
 import { InjectDB } from '../database/kysely.module';
 
@@ -20,5 +21,17 @@ export class PostService {
     const comments = await this.db.selectFrom('comment').selectAll().where('postId', '=', id).execute();
 
     return { ...post, comments };
+  }
+
+  async addComment({ uid, name }: User, id: number, content: string) {
+    await this.db
+      .selectFrom('post')
+      .selectAll()
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow(() => new NotFoundException('게시글을 찾을 수 없습니다.'));
+
+    await this.db.insertInto('comment').values({ postId: id, content, uid, name }).execute();
+
+    return this.getPostDetail(id);
   }
 }

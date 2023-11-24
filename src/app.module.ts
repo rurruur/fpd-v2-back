@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { KyselyModule } from './database/kysely.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { KyselyModule } from './database/kysely.module';
       }),
     }),
     AuthModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

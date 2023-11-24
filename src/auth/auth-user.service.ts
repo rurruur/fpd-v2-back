@@ -33,6 +33,6 @@ export class AuthUserService {
 
     const accessToken = this.authService.generateAccessToken(user);
 
-    return { accessToken };
+    return accessToken;
   }
 }

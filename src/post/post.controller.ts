@@ -14,6 +14,14 @@ export class PostController {
     return this.postservice.getPosts();
   }
 
+  @Post()
+  async createPost(
+    @Req() req: Request & { user: User },
+    @Body() { title, content }: { title: string; content: string },
+  ) {
+    return this.postservice.createPost(req.user, title, content);
+  }
+
   @Get(':id')
   async getPostDetail(@Param('id') id: number) {
     return this.postservice.getPostDetail(id);

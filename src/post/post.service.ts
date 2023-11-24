@@ -11,6 +11,16 @@ export class PostService {
     return this.db.selectFrom('post').selectAll().execute();
   }
 
+  async createPost({ uid, name }: User, title: string, content: string) {
+    const [result] = await this.db.insertInto('post').values({ uid, name, title, content }).execute();
+
+    return this.db
+      .selectFrom('post')
+      .selectAll()
+      .where('id', '=', result.insertId as any)
+      .executeTakeFirst();
+  }
+
   async getPostDetail(id: number) {
     const post = await this.db
       .selectFrom('post')

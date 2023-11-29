@@ -7,9 +7,14 @@ import { InjectDB } from '../database/kysely.module';
 export class PostService {
   constructor(@InjectDB() private readonly db: DB) {}
 
-  async getPosts() {
-    const posts = await this.db.selectFrom('post').selectAll().execute();
-    return posts.sort((a, b) => b.id - a.id);
+  async getPosts({ page, limit }: { page: number; limit: number }) {
+    return this.db
+      .selectFrom('post')
+      .selectAll()
+      .orderBy('id', 'desc')
+      .offset((page - 1) * limit)
+      .limit(limit)
+      .execute();
   }
 
   async createPost({ uid, name }: User, title: string, content: string) {

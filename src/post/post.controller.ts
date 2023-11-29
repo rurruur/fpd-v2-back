@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
 import { User } from '../auth/dto/user.dto';
@@ -10,8 +10,8 @@ export class PostController {
   constructor(private readonly postservice: PostService) {}
 
   @Get()
-  async getPosts() {
-    return this.postservice.getPosts();
+  async getPosts(@Query('page', ParseIntPipe) page: number, @Query('limit', ParseIntPipe) limit: number) {
+    return this.postservice.getPosts({ page, limit });
   }
 
   @Post()

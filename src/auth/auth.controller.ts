@@ -35,4 +35,10 @@ export class AuthController {
     });
     res.send(result);
   }
+
+  @Post('logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('accessToken');
+    res.sendStatus(HttpStatus.OK);
+  }
 }

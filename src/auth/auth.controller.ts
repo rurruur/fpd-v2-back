@@ -17,14 +17,15 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() { email, password }: LoginDto, @Res() res: Response) {
-    const accessToken = await this.authUserService.login(email, password);
+    const result = await this.authUserService.login(email, password);
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie('accessToken', result.accessToken, {
       httpOnly: true,
       secure: this.configService.get<string>('NODE_ENV') === 'production',
       domain: this.configService.get<string>('FRONTEND_DOMAIN'),
+      path: '/',
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
-    res.send({ success: true });
+    res.send(result);
   }
 }
